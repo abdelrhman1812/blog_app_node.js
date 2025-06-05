@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import userModel from "../../../DB/models/userModel.js";
+import userModel from "../../../DB/models/user.model.js";
 import AppError from "../../../utils/appError.js";
 
 /* ============================== Register ============================== */
