@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import CommentModel from "../../../DB/models/comment.model.js";
 import PostModel from "../../../DB/models/post.model.js";
 import cloudinary from "../../../service/cloudinary.js";
 import { destroyImages, uploadImages } from "../../../service/handlerImages.js";
@@ -7,7 +8,15 @@ import AppError from "../../../utils/appError.js";
 /* ================= Get Posts ================ */
 
 const getPosts = async (req, res) => {
-  const posts = await PostModel.find().populate("owner", "userName");
+  const posts = await PostModel.find()
+    .populate("owner", "userName email image")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "createdBy",
+        select: "userName email image",
+      },
+    });
   res.status(200).json({ message: "success", data: { posts } });
 };
 
@@ -48,17 +57,29 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
   const { title, content } = req.body;
   const { id } = req.params;
-  const post = await PostModel.findByIdAndUpdate(
-    id,
-    { title, content },
-    { new: true }
-  );
-  if (!post) {
-    return next(new AppError("post is not exist", 404));
-  }
-  return res.status(200).json({ message: "success", post });
-};
+  const userId = req.user._id;
 
+  const post = await PostModel.findById(id);
+  if (!post) {
+    return next(new AppError("Post not found", 404));
+  }
+
+  if (post.owner.toString() !== userId.toString()) {
+    return next(
+      new AppError("You are not authorized to update this post", 403)
+    );
+  }
+
+  if (title) post.title = title;
+  if (content) post.content = content;
+  await post.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Post updated successfully",
+    data: { post },
+  });
+};
 const deletePost = async (req, res, next) => {
   const userId = req.user._id;
   const { id } = req.params;
@@ -81,6 +102,7 @@ const deletePost = async (req, res, next) => {
     await cloudinary.api.delete_folder(folderPath);
   }
   const deletedPost = await PostModel.findByIdAndDelete(id);
+  await CommentModel.deleteMany({ post: id });
 
   return res
     .status(200)

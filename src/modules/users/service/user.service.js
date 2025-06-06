@@ -16,6 +16,16 @@ const getUserProfile = async (req, res, next) => {
   return res.status(200).json({ message: "success", data: { user, posts } });
 };
 
+/* ================= Get Profile By Id ================ */
+
+const getProfileById = async (req, res, next) => {
+  const { id } = req.params;
+  const user = await userModel.findById(id, "-password");
+  const posts = await PostModel.find().populate("comments");
+  if (!user) return next(new AppError("user is not exist", 404));
+  return res.status(200).json({ message: "success", data: { user, posts } });
+};
+
 /* ================= Update Image Profile ================ */
 const updateImageProfile = async (req, res, next) => {
   const userId = req.user._id;
@@ -52,4 +62,4 @@ const updateImageProfile = async (req, res, next) => {
   });
 };
 
-export { getUserProfile, updateImageProfile };
+export { getProfileById, getUserProfile, updateImageProfile };

@@ -40,7 +40,7 @@ const updateComment = async (req, res, next) => {
   });
 
   if (!comment) {
-    return next(new AppError("comment is not exist", 404));
+    return next(new AppError("Invalid comment ", 404));
   }
 
   comment.content = content;
@@ -56,7 +56,6 @@ const deleteComment = async (req, res, next) => {
   const userId = req.user._id;
   const { postId, commentId } = req.params;
 
-  console.log(userId);
   const comment = await CommentModel.findOne({
     post: postId,
     _id: commentId,

@@ -24,7 +24,7 @@ const signup = async (req, res, next) => {
     password: hashPassword,
   });
 
-  res.status(200).json({ message: "success", user });
+  res.status(200).json({ message: "success", success: true, date: { user } });
 };
 
 /* ============================== Login  ============================== */
@@ -55,7 +55,9 @@ const signin = async (req, res, next) => {
     // }
   );
 
-  return res.status(200).json({ message: "success", token });
+  return res
+    .status(200)
+    .json({ message: "success", success: true, data: { token } });
 };
 
 export { signin, signup };

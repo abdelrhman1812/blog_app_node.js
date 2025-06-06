@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "22.14.0"
+  },
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node --watch index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
