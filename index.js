@@ -2,6 +2,8 @@
 process.on("uncaughtException", (err) => {
   console.log("err in code", err);
 });
+import dotenv from "dotenv";
+dotenv.config({ path: "./config/.env" });
 
 import express from "express";
 import bootstrap from "./src/app.controller.js";

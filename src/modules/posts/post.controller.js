@@ -1,9 +1,48 @@
 import { Router } from "express";
+import authentication from "../../middleware/authentication.js";
 import catchError from "../../middleware/catchError.js";
-import { getLoggedInUserPosts } from "./service/post.service.js";
+import { validation } from "../../middleware/validation.js";
+import multerHost, { validationExtensions } from "../../utils/multerHost.js";
+import {
+  createPostValidation,
+  updatePostValidation,
+} from "./post.validation.js";
+import {
+  createPost,
+  deletePost,
+  getPosts,
+  updatePost,
+} from "./service/post.service.js";
 
 const postsRouter = Router();
 
-postsRouter.get("/", catchError(getLoggedInUserPosts));
+/* =============== Get Posts =============== */
+
+postsRouter.get("/", catchError(getPosts));
+
+/* =============== Create Post =============== */
+
+postsRouter.post(
+  "/",
+  authentication,
+  multerHost(validationExtensions.image).fields([
+    { name: "images", maxCount: 10 },
+  ]),
+  validation(createPostValidation),
+  catchError(createPost)
+);
+
+/* =============== Update Post =============== */
+
+postsRouter.patch(
+  "/:id",
+  authentication,
+  validation(updatePostValidation),
+  catchError(updatePost)
+);
+
+/* =============== Delete Post ===============  */
+
+postsRouter.delete("/:id", authentication, catchError(deletePost));
 
 export default postsRouter;

@@ -12,7 +12,7 @@ const postSchema = new Schema(
     content: {
       type: String,
       trim: true,
-      minLength: [10, "Content must be at least 10 characters"],
+      minLength: [5, "Content must be at least 5 characters"],
       maxLength: [2000, "Content must be at most 2000 characters"],
     },
     owner: {
@@ -21,7 +21,13 @@ const postSchema = new Schema(
       required: [true, "Post owner is required"],
       immutable: true,
     },
-    image: {
+    images: [
+      {
+        secure_url: String,
+        public_id: String,
+      },
+    ],
+    customId: {
       type: String,
     },
   },
