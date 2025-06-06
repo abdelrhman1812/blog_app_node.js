@@ -32,7 +32,11 @@ const userSchema = new Schema(
       type: String,
     },
     phone: String,
-    image: String,
+    image: {
+      secure_url: String,
+      public_id: String,
+    },
+    customId: String,
     DOB: Date,
     role: {
       type: String,

@@ -49,10 +49,10 @@ const signin = async (req, res, next) => {
       email: user.email,
       role: user.role,
     },
-    process.env.JWT_SECRET_KEY,
-    {
-      expiresIn: "24h",
-    }
+    process.env.JWT_SECRET_KEY
+    // {
+    //   expiresIn: "24h",
+    // }
   );
 
   return res.status(200).json({ message: "success", token });

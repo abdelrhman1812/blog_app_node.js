@@ -1,4 +1,5 @@
 import connectDB from "./DB/db.connections.js";
+import adminRouter from "./modules/admin/admin.controller.js";
 import authRouter from "./modules/auth/auth.controller.js";
 import postsRouter from "./modules/posts/post.controller.js";
 import usersRouter from "./modules/users/user.controller.js";
@@ -11,6 +12,7 @@ const bootstrap = (app, express) => {
     return res.send("Hello form my Blog  ");
   });
 
+  app.use("/admin", adminRouter);
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
   app.use("/posts", postsRouter);

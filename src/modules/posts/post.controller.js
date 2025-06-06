@@ -3,6 +3,7 @@ import authentication from "../../middleware/authentication.js";
 import catchError from "../../middleware/catchError.js";
 import { validation } from "../../middleware/validation.js";
 import multerHost, { validationExtensions } from "../../utils/multerHost.js";
+import commentRouter from "../comment/comment.controller.js";
 import {
   createPostValidation,
   updatePostValidation,
@@ -15,6 +16,8 @@ import {
 } from "./service/post.service.js";
 
 const postsRouter = Router();
+
+postsRouter.use("/:postId/comments", commentRouter);
 
 /* =============== Get Posts =============== */
 

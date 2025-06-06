@@ -11,12 +11,6 @@ const getPosts = async (req, res) => {
   res.status(200).json({ message: "success", data: { posts } });
 };
 
-/* ================= Get Logged In User Posts ================  */
-const getLoggedInUserPosts = async (req, res) => {
-  const posts = await PostModel.find();
-  res.status(200).json({ message: "success", posts });
-};
-
 /* ================= Create Post ================ */
 const createPost = async (req, res, next) => {
   try {
