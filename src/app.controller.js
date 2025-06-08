@@ -1,5 +1,4 @@
 import cors from "cors";
-import connectDB from "./DB/db.connections.js";
 import adminRouter from "./modules/admin/admin.controller.js";
 import authRouter from "./modules/auth/auth.controller.js";
 import postsRouter from "./modules/posts/post.controller.js";
@@ -22,8 +21,6 @@ const bootstrap = (app, express) => {
   app.all(/^.*$/, (req, res) => {
     res.status(404).json({ message: `route not found ${req.originalUrl}` });
   });
-
-  connectDB();
 };
 
 export default bootstrap;
