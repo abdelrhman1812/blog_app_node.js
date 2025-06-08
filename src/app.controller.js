@@ -1,11 +1,8 @@
-import cors from "cors";
 import adminRouter from "./modules/admin/admin.controller.js";
 import authRouter from "./modules/auth/auth.controller.js";
 import postsRouter from "./modules/posts/post.controller.js";
 import usersRouter from "./modules/users/user.controller.js";
 const bootstrap = (app, express) => {
-  app.use(cors());
-
   app.use(express.json());
   app.use("/uploads", express.static("uploads"));
 

@@ -5,6 +5,7 @@ process.on("uncaughtException", (err) => {
 import dotenv from "dotenv";
 dotenv.config({ path: "./config/.env" });
 
+import cors from "cors";
 import express from "express";
 import bootstrap from "./src/app.controller.js";
 import connectDB from "./src/DB/db.connections.js";
@@ -12,7 +13,7 @@ import globalErrorHandler from "./src/utils/globalError.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+app.use(cors());
 bootstrap(app, express);
 
 app.use(globalErrorHandler);
