@@ -9,6 +9,7 @@ import AppError from "../../../utils/appError.js";
 
 const getPosts = async (req, res) => {
   const posts = await PostModel.find()
+    .sort({ createdAt: -1 })
     .populate("owner", "userName email image")
     .populate({
       path: "comments",
