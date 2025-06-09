@@ -7,7 +7,7 @@ const bootstrap = (app, express) => {
   app.use("/uploads", express.static("uploads"));
 
   app.get("/", (req, res) => {
-    return res.send("Hello form my Blog  ");
+    return res.send("Hello form my Blog 'Abdelrhman'  ");
   });
 
   app.use("/admin", adminRouter);
