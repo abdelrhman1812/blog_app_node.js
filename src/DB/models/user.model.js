@@ -47,6 +47,12 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.virtual("comments", {
+  localField: "_id",
+  foreignField: "owner",
+  ref: "Comment",
+});
+
 const userModel = mongoose.models.Users || model("User", userSchema);
 
 export default userModel;
