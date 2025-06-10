@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { model, Schema, Types } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -43,10 +43,21 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    followers: [
+      {
+        type: Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
-
 
 /*
 userSchema.virtual("posts", {

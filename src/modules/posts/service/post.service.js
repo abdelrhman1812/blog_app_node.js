@@ -11,6 +11,7 @@ const getPosts = async (req, res) => {
   const posts = await PostModel.find()
     .sort({ createdAt: -1 })
     .populate("owner", "userName email image")
+    .populate("likes", "userName email image")
     .populate({
       path: "comments",
       populate: {
@@ -18,39 +19,38 @@ const getPosts = async (req, res) => {
         select: "userName email image",
       },
     });
-  res.status(200).json({ message: "success", data: { posts } });
+  return res
+    .status(200)
+    .json({ message: "success", data: { posts }, success: true });
 };
 
 /* ================= Create Post ================ */
-const createPost = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-    const { title, content } = req.body;
+const createPost = async (req, res) => {
+  const userId = req.user._id;
+  const { title, content } = req.body;
 
-    const customId = nanoid(5);
-    const folderPath = `social_app/posts/Images/${customId}`;
+  const customId = nanoid(5);
+  const folderPath = `social_app/posts/Images/${customId}`;
 
-    let listImages = [];
+  let listImages = [];
 
-    if (req.files?.images?.length) {
-      listImages = await uploadImages(req.files.images, folderPath);
-    }
-
-    const post = await PostModel.create({
-      title,
-      content,
-      images: listImages,
-      owner: userId,
-      customId,
-    });
-
-    return res.status(201).json({
-      success: true,
-      data: { post },
-    });
-  } catch (err) {
-    next(err);
+  if (req.files?.images?.length) {
+    listImages = await uploadImages(req.files.images, folderPath);
   }
+
+  const post = await PostModel.create({
+    title,
+    content,
+    images: listImages,
+    owner: userId,
+    customId,
+  });
+
+  return res.status(201).json({
+    message: "Post created successfully",
+    success: true,
+    data: { post },
+  });
 };
 
 /* ================= Update Post ================ */
@@ -81,6 +81,9 @@ const updatePost = async (req, res, next) => {
     data: { post },
   });
 };
+
+/* ================= Delete Post ================ */
+
 const deletePost = async (req, res, next) => {
   const userId = req.user._id;
   const { id } = req.params;
@@ -107,7 +110,42 @@ const deletePost = async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ message: "success delete", success: true, deletedPost });
+    .json({ message: "success delete", success: true, data: { deletedPost } });
 };
 
-export { createPost, deletePost, getPosts, updatePost };
+/* ================= Create Like For Post ================ */
+const createLike = async (req, res, next) => {
+  const userId = req.user._id;
+  const { postId } = req.params;
+  const { action } = req.query;
+
+  if (!action || !["like", "unlike"].includes(action)) {
+    return next(
+      new AppError("Invalid action. Must be 'like' or 'unlike'", 400)
+    );
+  }
+
+  const post = await PostModel.findById(postId);
+  if (!post) {
+    return next(new AppError("Post does not exist", 404));
+  }
+
+  let data =
+    action === "like"
+      ? { $addToSet: { likes: userId } }
+      : { $pull: { likes: userId } };
+
+  const updatedPost = await PostModel.findByIdAndUpdate(postId, data, {
+    new: true,
+  });
+
+  return res.status(200).json({
+    message: `${action === "like" ? "liked" : "unlike"} successfully`,
+    success: true,
+    data: {
+      post: updatedPost,
+    },
+  });
+};
+
+export { createLike, createPost, deletePost, getPosts, updatePost };

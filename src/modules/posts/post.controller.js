@@ -9,6 +9,7 @@ import {
   updatePostValidation,
 } from "./post.validation.js";
 import {
+  createLike,
   createPost,
   deletePost,
   getPosts,
@@ -47,5 +48,9 @@ postsRouter.patch(
 /* =============== Delete Post ===============  */
 
 postsRouter.delete("/:id", authentication, catchError(deletePost));
+
+/* =============== Create Like For Post ===============  */
+
+postsRouter.patch("/:postId/like", authentication, catchError(createLike));
 
 export default postsRouter;
