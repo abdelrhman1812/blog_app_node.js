@@ -11,7 +11,7 @@ import AppError from "../../../utils/appError.js";
 const getUserProfile = async (req, res, next) => {
   const userId = req.user._id;
   const user = await userModel.findById(userId, "-password");
-  const posts = await PostModel.find()
+  const posts = await PostModel.find({ owner: userId })
     .populate("comments")
     .populate("owner")
     .sort({ createdAt: -1 });
@@ -24,7 +24,9 @@ const getUserProfile = async (req, res, next) => {
 const getProfileById = async (req, res, next) => {
   const { id } = req.params;
   const user = await userModel.findById(id, "-password");
-  const posts = await PostModel.find().populate("comments");
+  const posts = await PostModel.find({ owner: userId })
+    .populate("comments")
+    .populate("owner");
   if (!user) return next(new AppError("user is not exist", 404));
   return res.status(200).json({ message: "success", data: { user, posts } });
 };
