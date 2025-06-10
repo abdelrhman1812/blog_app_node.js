@@ -24,9 +24,17 @@ const getUserProfile = async (req, res, next) => {
 const getProfileById = async (req, res, next) => {
   const { id } = req.params;
   const user = await userModel.findById(id, "-password");
-  const posts = await PostModel.find({ owner: id })
-    .populate("comments")
-    .populate("owner");
+ const posts = await PostModel.find({ owner: id })
+    .populate({
+      path: "owner" 
+    })
+    .populate({
+      path: "comments",
+      populate: {
+        path: "createdBy" 
+      }
+    })
+
   if (!user) return next(new AppError("user is not exist", 404));
   return res.status(200).json({ message: "success", data: { user, posts } });
 };
