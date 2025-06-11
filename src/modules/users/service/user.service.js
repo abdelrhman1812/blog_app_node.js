@@ -21,6 +21,7 @@ const getUserProfile = async (req, res, next) => {
       select: "userName email image",
     });
   const posts = await PostModel.find({ owner: userId })
+     .populate("likes", "userName email image")
     .populate("comments")
     .populate("owner")
 
