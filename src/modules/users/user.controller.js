@@ -6,6 +6,7 @@ import {
   followUser,
   getProfileById,
   getUserProfile,
+  getUserUnfollow,
   updateImageProfile,
 } from "./service/user.service.js";
 
@@ -13,6 +14,9 @@ const usersRouter = Router();
 
 /* ================= Get User Profile ================ */
 usersRouter.get("/", authentication, catchError(getUserProfile));
+
+/* ================= Get Users For Follow ================ */
+usersRouter.get("/unfollow", authentication, catchError(getUserUnfollow));
 
 /* ================= Get Profile By Id ================ */
 

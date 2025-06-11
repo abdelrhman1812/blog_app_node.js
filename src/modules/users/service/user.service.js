@@ -21,7 +21,7 @@ const getUserProfile = async (req, res, next) => {
       select: "userName email image",
     });
   const posts = await PostModel.find({ owner: userId })
-     .populate("likes", "userName email image")
+    .populate("likes", "userName email image")
     .populate("comments")
     .populate("owner")
 
@@ -159,4 +159,28 @@ const followUser = async (req, res, next) => {
   });
 };
 
-export { followUser, getProfileById, getUserProfile, updateImageProfile };
+/* ================ Get Users For Follow ================ */
+
+const getUserUnfollow = async (req, res, next) => {
+  const userId = req.user._id;
+
+  const currentUser = await userModel.findById(userId).select("following");
+
+  const followingIds = currentUser.following.map((id) => id.toString());
+
+  followingIds.push(userId.toString());
+
+  const users = await userModel
+    .find({ _id: { $nin: followingIds } })
+    .select("userName email image followers ");
+
+  return res.status(200).json({ message: "success", data: { users } });
+};
+
+export {
+  followUser,
+  getProfileById,
+  getUserProfile,
+  getUserUnfollow,
+  updateImageProfile,
+};
