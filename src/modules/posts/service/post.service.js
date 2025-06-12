@@ -14,6 +14,7 @@ const getPosts = async (req, res) => {
     .populate("likes", "userName email image")
     .populate({
       path: "comments",
+      select: "content  createdAt",
       populate: {
         path: "createdBy",
         select: "userName email image",
@@ -148,4 +149,32 @@ const createLike = async (req, res, next) => {
   });
 };
 
-export { createLike, createPost, deletePost, getPosts, updatePost };
+/* ================= Get Post By Id ================ */
+
+const getPostById = async (req, res, next) => {
+  const { id } = req.params;
+  const post = await PostModel.findById(id)
+    .populate("owner", "userName email image")
+    .populate("likes", "userName email image")
+    .populate({
+      path: "comments",
+      select: "content  createdAt",
+      populate: {
+        path: "createdBy",
+        select: "userName email image",
+      },
+    });
+  if (!post) {
+    return next(new AppError("post is not exist", 404));
+  }
+  return res.status(200).json({ message: "success", data: { post } });
+};
+
+export {
+  createLike,
+  createPost,
+  deletePost,
+  getPostById,
+  getPosts,
+  updatePost,
+};

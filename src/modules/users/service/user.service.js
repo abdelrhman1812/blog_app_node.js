@@ -10,23 +10,22 @@ import AppError from "../../../utils/appError.js";
 /* ================= Get User Profile ================ */
 const getUserProfile = async (req, res, next) => {
   const userId = req.user._id;
-  const user = await userModel
-    .findById(userId, "-password")
-    .populate({
-      path: "following",
-      select: "userName email image",
-    })
-    .populate({
-      path: "followers",
-      select: "userName email image",
-    });
-  const posts = await PostModel.find({ owner: userId })
-    .populate("likes", "userName email image")
+  const user = await userModel.findById(userId, "-password");
+  //   .populate({
+  //     path: "following",
+  //     select: "userName email image",
+  //   })
+  //   .populate({
+  //     path: "followers",
+  //     select: "userName email image",
+  //   });
+  // const posts = await PostModel.find({ owner: userId })
+  //   .populate("likes", "userName email image")
 
-    .populate("comments")
-    .populate("owner")
+  //   .populate("comments")
+  //   .populate("owner")
 
-    .sort({ createdAt: -1 });
+  //   .sort({ createdAt: -1 });
   if (!user) return next(new AppError("user is not exist", 404));
   return res.status(200).json({ message: "success", data: { user, posts } });
 };
@@ -50,11 +49,13 @@ const getProfileById = async (req, res, next) => {
     .populate("likes", "userName email image")
     .populate({
       path: "owner",
+      select: "userName email image",
     })
     .populate({
       path: "comments",
       populate: {
         path: "createdBy",
+        select: "userName email image",
       },
     });
 

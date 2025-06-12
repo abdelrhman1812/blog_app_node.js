@@ -12,6 +12,7 @@ import {
   createLike,
   createPost,
   deletePost,
+  getPostById,
   getPosts,
   updatePost,
 } from "./service/post.service.js";
@@ -23,6 +24,9 @@ postsRouter.use("/:postId/comments", commentRouter);
 /* =============== Get Posts =============== */
 
 postsRouter.get("/", catchError(getPosts));
+
+/* =============== Get Post By Id =============== */
+postsRouter.get("/:id", catchError(getPostById));
 
 /* =============== Create Post =============== */
 
