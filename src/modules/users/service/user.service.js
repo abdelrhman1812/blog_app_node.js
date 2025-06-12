@@ -22,6 +22,7 @@ const getUserProfile = async (req, res, next) => {
     });
   const posts = await PostModel.find({ owner: userId })
     .populate("likes", "userName email image")
+
     .populate("comments")
     .populate("owner")
 
@@ -46,6 +47,7 @@ const getProfileById = async (req, res, next) => {
     });
 
   const posts = await PostModel.find({ owner: id })
+    .populate("likes", "userName email image")
     .populate({
       path: "owner",
     })
