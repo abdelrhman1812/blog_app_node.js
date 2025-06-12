@@ -27,7 +27,7 @@ const getUserProfile = async (req, res, next) => {
 
   //   .sort({ createdAt: -1 });
   if (!user) return next(new AppError("user is not exist", 404));
-  return res.status(200).json({ message: "success", data: { user, posts } });
+  return res.status(200).json({ message: "success", data: { user } });
 };
 
 /* ================= Get Profile By Id ================ */
