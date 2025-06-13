@@ -55,6 +55,7 @@ const userSchema = new Schema(
         ref: "User",
       },
     ],
+    bio: String,
   },
   { timestamps: true }
 );

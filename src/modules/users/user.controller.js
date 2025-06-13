@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authentication from "../../middleware/authentication.js";
 import catchError from "../../middleware/catchError.js";
+import { validation } from "../../middleware/validation.js";
 import multerHost, { validationExtensions } from "../../utils/multerHost.js";
 import {
   followUser,
@@ -8,7 +9,9 @@ import {
   getUserProfile,
   getUserUnfollow,
   updateImageProfile,
+  updateProfile,
 } from "./service/user.service.js";
+import { updateUserProfileValidation } from "./user.validation.js";
 
 const usersRouter = Router();
 
@@ -29,6 +32,15 @@ usersRouter.patch(
   authentication,
   multerHost(validationExtensions.image).single("image"),
   catchError(updateImageProfile)
+);
+
+/* ================= Update Profile ================ */
+
+usersRouter.patch(
+  "/update-profile",
+  authentication,
+  validation(updateUserProfileValidation),
+  catchError(updateProfile)
 );
 
 /* ================= Handle Follow User ================= */

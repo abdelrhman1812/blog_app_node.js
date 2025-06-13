@@ -180,10 +180,36 @@ const getUserUnfollow = async (req, res, next) => {
   return res.status(200).json({ message: "success", data: { users } });
 };
 
+/* ================= Update Profile ================ */
+
+const updateProfile = async (req, res, next) => {
+  const userId = req.user._id;
+  const { userName, email, address, phone, bio } = req.body;
+
+  const user = await userModel.findById(userId);
+  if (!user) {
+    return next(new AppError("User does not exist", 404));
+  }
+
+  if (userName) user.userName = userName;
+  if (email) user.email = email;
+  if (address) user.address = address || "";
+  if (phone) user.phone = phone || "";
+  if (bio) user.bio = bio;
+  await user.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    data: { user },
+  });
+};
+
 export {
   followUser,
   getProfileById,
   getUserProfile,
   getUserUnfollow,
   updateImageProfile,
+  updateProfile,
 };
