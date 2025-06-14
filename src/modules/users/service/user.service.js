@@ -182,46 +182,62 @@ const getUserUnfollow = async (req, res, next) => {
 
 /* ================= Update Profile ================ */
 const updateProfile = async (req, res, next) => {
+  const userId = req.user._id;
+  const { userName, email, address, phone, bio } = req.body;
 
-    const userId = req.user._id;
-    const { userName, email, address, phone, bio } = req.body;
+  const user = await userModel.findById(userId);
+  if (!user) {
+    return next(new AppError("User does not exist", 404));
+  }
 
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return next(new AppError("User does not exist", 404));
-    }
-
-    if (email) {
-      const emailIsExist = await userModel.findOne({
-        email: email.toLowerCase(),
-        _id: { $ne: userId },
-      });
-      if (emailIsExist) {
-        return next(new AppError("Email already in use", 403));
-      }
-      user.email = email.toLowerCase();
-    }
-
-    if (userName !== undefined) user.userName = userName;
-    if (address !== undefined) user.address = address;
-    if (phone !== undefined) user.phone = phone;
-    if (bio !== undefined) user.bio = bio;
-
-    await user.save();
-
-
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      data: { user },
+  if (email) {
+    const emailIsExist = await userModel.findOne({
+      email: email.toLowerCase(),
+      _id: { $ne: userId },
     });
-  
+    if (emailIsExist) {
+      return next(new AppError("Email already in use", 403));
+    }
+    user.email = email.toLowerCase();
+  }
+
+  if (userName !== undefined) user.userName = userName;
+  if (address !== undefined) user.address = address;
+  if (phone !== undefined) user.phone = phone;
+  if (bio !== undefined) user.bio = bio;
+
+  await user.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    data: { user },
+  });
+};
+
+/* ================= Get User FOllower ================ */
+
+const getUserFollower = async (req, res, next) => {
+  const userId = req.user._id;
+  const user = await userModel
+    .findById(userId, "-password")
+    .populate({
+      path: "following",
+      select: "userName email image",
+    })
+    .populate({
+      path: "followers",
+      select: "userName email image",
+    });
+
+  if (!user) return next(new AppError("user is not exist", 404));
+  return res.status(200).json({ message: "success", data: { user } });
 };
 
 export {
   followUser,
   getProfileById,
+  getUserFollower,
   getUserProfile,
   getUserUnfollow,
   updateImageProfile,

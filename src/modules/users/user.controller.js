@@ -6,6 +6,7 @@ import multerHost, { validationExtensions } from "../../utils/multerHost.js";
 import {
   followUser,
   getProfileById,
+  getUserFollower,
   getUserProfile,
   getUserUnfollow,
   updateImageProfile,
@@ -20,6 +21,10 @@ usersRouter.get("/", authentication, catchError(getUserProfile));
 
 /* ================= Get Users For Follow ================ */
 usersRouter.get("/unfollow", authentication, catchError(getUserUnfollow));
+
+/* ================= Get Users Follower ================ */
+
+usersRouter.get("/followers", authentication, catchError(getUserFollower));
 
 /* ================= Get Profile By Id ================ */
 
