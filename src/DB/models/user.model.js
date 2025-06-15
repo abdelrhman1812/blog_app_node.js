@@ -56,6 +56,7 @@ const userSchema = new Schema(
       },
     ],
     bio: String,
+    code: String,
   },
   { timestamps: true }
 );

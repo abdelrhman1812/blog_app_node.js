@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { customAlphabet } from "nanoid";
 import userModel from "../../../DB/models/user.model.js";
+import sendEmails from "../../../service/email.js";
 import AppError from "../../../utils/appError.js";
 
 /* ============================== Register ============================== */
@@ -60,4 +62,57 @@ const signin = async (req, res, next) => {
     .json({ message: "success", success: true, data: { token } });
 };
 
-export { signin, signup };
+/* ============================== Forgot Password ============================== */
+
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  /* Check If User Exist */
+  const user = await userModel.findOne({ email });
+  if (!user) return next(new AppError("user is not exist", 404));
+
+  /* Generate New Code */
+  const code = customAlphabet("1234567890", 6);
+  const newCode = code();
+
+  /* Send Email */
+  await sendEmails(
+    email,
+    "Forget Password",
+    `<h1>Your code is ${newCode}</h1>`,
+    res
+  );
+
+  /* Update User Code */
+  await userModel.updateOne({ _id: user._id }, { code: newCode });
+
+  return res.json({ message: "success", success: true });
+};
+
+/* =============================== Reset Password ===============================  */
+
+const resetPassword = async (req, res, next) => {
+  const { email, code, newPassword } = req.body;
+
+  /* Check If User Exist */
+  const user = await userModel.findOne({ email: email.toLowerCase() });
+  if (!user) return next(new AppError("user is not exist", 404));
+
+  /* Compare Code */
+  if (user.code !== code) return next(new AppError("invalid code", 401));
+
+  /* Change Password */
+
+  const hashPassword = bcrypt.hashSync(newPassword, 8);
+
+  user.password = hashPassword;
+  user.code = "";
+
+  /* Update User Password */
+
+  await user.save();
+
+  return res.json({ message: "success reset password", success: true });
+};
+
+export { forgotPassword, resetPassword, signin, signup };
