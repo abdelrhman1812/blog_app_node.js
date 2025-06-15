@@ -7,7 +7,7 @@ import customMessages from "../../utils/validationMessages.js";
 const createPostValidation = {
   body: Joi.object({
     title: Joi.string()
-      .min(2)
+      .min(1)
       .max(60)
       .trim()
       .required()
@@ -32,12 +32,12 @@ const createPostValidation = {
 const updatePostValidation = {
   body: Joi.object({
     title: Joi.string()
-      .min(2)
+      .min(1)
       .max(60)
       .trim()
       .messages(customMessages("The Post Title")),
     content: Joi.string()
-      .min(5)
+      .min(1)
       .max(2000)
       .trim()
       .messages(customMessages("The Post Content")),

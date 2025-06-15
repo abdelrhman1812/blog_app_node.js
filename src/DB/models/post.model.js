@@ -5,14 +5,14 @@ const postSchema = new Schema(
     title: {
       type: String,
       trim: true,
-      minLength: [3, "Title must be at least 3 characters"],
+      minLength: [1, "Title must be at least 3 characters"],
       maxLength: [50, "Title must be at most 50 characters"],
       required: [true, "Title is required"],
     },
     content: {
       type: String,
       trim: true,
-      minLength: [5, "Content must be at least 5 characters"],
+      minLength: [1, "Content must be at least 5 characters"],
       maxLength: [2000, "Content must be at most 2000 characters"],
     },
     owner: {
