@@ -13,10 +13,10 @@ const createPostValidation = {
       .required()
       .messages(customMessages("The Post Title")),
     content: Joi.string()
-      .min(5)
+
       .max(2000)
       .trim()
-      .required()
+
       .messages(customMessages("The Post Content")),
   }),
   files: Joi.object({
@@ -37,7 +37,6 @@ const updatePostValidation = {
       .trim()
       .messages(customMessages("The Post Title")),
     content: Joi.string()
-      .min(1)
       .max(2000)
       .trim()
       .messages(customMessages("The Post Content")),

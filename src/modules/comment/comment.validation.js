@@ -6,7 +6,7 @@ import customMessages from "../../utils/validationMessages.js";
 const createCommentValidation = {
   body: Joi.object({
     content: Joi.string()
-      .min(5)
+      .min(1)
       .max(2000)
       .trim()
       .required()

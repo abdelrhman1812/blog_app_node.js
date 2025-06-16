@@ -12,7 +12,6 @@ const postSchema = new Schema(
     content: {
       type: String,
       trim: true,
-      minLength: [1, "Content must be at least 5 characters"],
       maxLength: [2000, "Content must be at most 2000 characters"],
     },
     owner: {
