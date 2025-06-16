@@ -183,7 +183,7 @@ const getUserUnfollow = async (req, res, next) => {
 /* ================= Update Profile ================ */
 const updateProfile = async (req, res, next) => {
   const userId = req.user._id;
-  const { userName, email, address, phone, bio } = req.body;
+  const { userName, email, address, phone, bio, linkProfile } = req.body;
 
   const user = await userModel.findById(userId);
   if (!user) {
@@ -205,6 +205,7 @@ const updateProfile = async (req, res, next) => {
   if (address !== undefined) user.address = address;
   if (phone !== undefined) user.phone = phone;
   if (bio !== undefined) user.bio = bio;
+  if (linkProfile !== undefined) user.linkProfile = linkProfile;
 
   await user.save();
 

@@ -56,6 +56,7 @@ const userSchema = new Schema(
       },
     ],
     bio: String,
+    linkProfile: String,
     code: String,
   },
   { timestamps: true }

@@ -8,6 +8,9 @@ const updateUserProfileValidation = {
     address: Joi.string().messages(customMessages(" The address")),
     phone: Joi.string().messages(customMessages(" The phone number")),
     bio: Joi.string().messages(customMessages(" The bio")),
+    linkProfile: Joi.string()
+      .uri()
+      .messages(customMessages(" The link profile")),
   }),
 };
 
