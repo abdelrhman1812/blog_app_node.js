@@ -150,6 +150,9 @@ const followUser = async (req, res, next) => {
       new: true,
     }
   );
+  
+    const isFollowing = action === "follow";
+
 
   return res.status(200).json({
     status: "success",
@@ -158,6 +161,7 @@ const followUser = async (req, res, next) => {
       action,
       currentUserFollowing: updatedCurrentUser.following,
       targetUserFollowers: updatedTargetUser.followers,
+      isFollowing
     },
   });
 };
