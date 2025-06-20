@@ -179,7 +179,7 @@ const getUserUnfollow = async (req, res, next) => {
 
   const users = await userModel
     .find({ _id: { $nin: followingIds } })
-    .select("userName email image followers bio ");
+    .select("userName email image followers bio address ");
 
   return res.status(200).json({ message: "success", data: { users } });
 };
