@@ -179,9 +179,12 @@ const getUserUnfollow = async (req, res, next) => {
 
   const users = await userModel
     .find({ _id: { $nin: followingIds } })
-    .select("userName email image followers bio address ");
+    .select("userName email image followers bio address ").;
+    
+        const postsCount = await PostModel.countDocuments({ owner: userId });
 
-  return res.status(200).json({ message: "success", data: { users } });
+
+  return res.status(200).json({ message: "success", data: { users ,postsCount} });
 };
 
 /* ================= Update Profile ================ */
