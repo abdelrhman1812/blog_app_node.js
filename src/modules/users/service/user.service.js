@@ -150,9 +150,8 @@ const followUser = async (req, res, next) => {
       new: true,
     }
   );
-  
-    const isFollowing = action === "follow";
 
+  const isFollowing = action === "follow";
 
   return res.status(200).json({
     status: "success",
@@ -161,7 +160,7 @@ const followUser = async (req, res, next) => {
       action,
       currentUserFollowing: updatedCurrentUser.following,
       targetUserFollowers: updatedTargetUser.followers,
-      isFollowing
+      isFollowing,
     },
   });
 };
@@ -179,12 +178,13 @@ const getUserUnfollow = async (req, res, next) => {
 
   const users = await userModel
     .find({ _id: { $nin: followingIds } })
-    .select("userName email image followers bio address ").;
-    
-        const postsCount = await PostModel.countDocuments({ owner: userId });
+    .select("userName email image followers bio address ");
 
+  const postsCount = await PostModel.countDocuments({ owner: userId });
 
-  return res.status(200).json({ message: "success", data: { users ,postsCount} });
+  return res
+    .status(200)
+    .json({ message: "success", data: { users, postsCount } });
 };
 
 /* ================= Update Profile ================ */
