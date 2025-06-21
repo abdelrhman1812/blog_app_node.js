@@ -19,7 +19,7 @@ const sendEmails = async (email, subject, htmlContent, res) => {
   } catch (error) {
     console.error("Error initializing email sending:", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Email sending failed", error });
+      return res.status(500).json({ message: "Email sending failed", error });
     }
     return false;
   }

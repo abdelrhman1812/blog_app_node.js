@@ -11,7 +11,7 @@ const getPosts = async (req, res) => {
   const posts = await PostModel.find()
     .sort({ createdAt: -1 })
     .populate("owner", "userName email image")
-    .populate("likes", "userName email image")
+    .populate("likes", "userName email image bio")
     .populate({
       path: "comments",
       select: "content  createdAt",
